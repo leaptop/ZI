@@ -9,9 +9,10 @@ public class Main {
 
     public static void main(String[] args) {
         System.out.println("a^x mod p = " + powMod(3, 100, 7));
-        int[] g = generEucl(28, 8);
+        System.out.println("a^x mod p = " + powMod(2, 34, 61));
+        long[] g = generEucl(28, 8);
         System.out.println("gcd(a, b) = " + g[0] + ", x = " + g[1] + ", y = " + g[2]);
-        int[] g2 = invers(11, 7);
+        long[] g2 = invers(11, 7);
         System.out.println("invers(11, 7) = " + g2[1] + ", gcd(11, 7) = " + g2[0]);
         funcDifHel(153656, 535544, 10667, 3);
         System.out.println("находим простые числа: ");
@@ -20,18 +21,25 @@ public class Main {
                 System.out.print(n + " ");
         }
         System.out.println("\nНаходим \nG, P:");
-        for (int i = 0; i < 3; i++) {
-            int[] arr = getGP();
+        for (int i = 0; i < 1; i++) {
+            long[] arr = getGP();
             System.out.println(arr[0] + ", " + arr[1]);
         }
-        System.out.println("babystep = " + babystep(2, 61, 45));  ;
+       /* System.out.println("babystep(5, 7, 1) = " + babyStep(5, 7, 1));// 6 incorrect. Must be 12. My solving by hand
+        System.out.println("babystep(5, 7, 4) = " + babyStep(5, 7, 4));// -1 incorrect. Must be 20. Metodichka
+        System.out.println("babystep(10, 23, 14) = " + babyStep(10, 23, 14));// 7
+        System.out.println("babystep(14, 23, 15) = " + babyStep(14, 23, 15));// 5
+        System.out.println("babystep(15, 23, 19) = " + babyStep(15, 23, 19));// 19
+        System.out.println("babystep(19, 23, 10) = " + babyStep(19, 23, 10));// 9
+        System.out.println("babystep(3, 7, 4) = " + babyStep(3, 7, 4));// 4 incorrect. Must be 100. Ryabko*/
+        System.out.println("babystep(5, 7, 1) = " + babyStep(5, 7, 1));// 6 incorrect. Must be 12.
     }
 
     //метод для вычисления возведения в степень по модулю:
-    public static int powMod(int a, int x, int p) {
-        int y = 1;
-        int s = a;
-        int counter = 1;
+    public static long powMod(long a, long x, long p) {
+        long y = 1;
+        long s = a;
+        long counter = 1;
         for (int i = 1; i <= pow(i, 31); i *= 2) {//31 - число значащих битов в int
             //System.out.println(counter++ +") x & i = "+ (x & i));// не уверен насчёт байтов(их числа для подсчёта)
             if ((x & i) >= 1) {
@@ -46,11 +54,11 @@ public class Main {
     // что ax + by = gcd(a, b)(greatest common divisor). Представленный далее метод возвращает вектор, на первом
     // месте которого наибольший общий делитель, два других - x & y.
     //метод для реализации обобщённого алгоритма Евклида(a>b, оба числа д.б. положительными) :
-    public static int[] generEucl(int a, int b) {
-        int[] u = {a, 1, 0};
-        int[] v = {b, 0, 1};
-        int q = 0;
-        int[] t = {0, 0, 0};
+    public static long[] generEucl(long a, long b) {
+        long[] u = {a, 1, 0};
+        long[] v = {b, 0, 1};
+        long q = 0;
+        long[] t = {0, 0, 0};
         while (v[0] != 0) {
             q = u[0] / v[0];
             t[0] = u[0] % v[0];
@@ -66,11 +74,11 @@ public class Main {
     //Для заданных чисел c & m (с & m - взаимно простые) число d (0 < d < m) называется инверсией числа по модулю m,
     //если выполняется условие c*d mod m = 1. c - чило, d - инверсия, m - модуль.
     //Инверсия обозначается: d = (c^(-1))mod m. Метод нахождения инверсии(выход: первое число - gcd, второе - инверсия):
-    public static int[] invers(int m, int c) {
-        int[] u = {m, 0};
-        int[] v = {c, 1};
-        int[] t = {0, 0};
-        int q = 0;
+    public static long[] invers(long m, long c) {
+        long[] u = {m, 0};
+        long[] v = {c, 1};
+        long[] t = {0, 0};
+        long q = 0;
         while (v[0] != 0) {
             q = u[0] / v[0];
             t[0] = u[0] % v[0];
@@ -87,13 +95,13 @@ public class Main {
     // Xa & Xb, Ya & Yb - закрытые и открытые ключи соответственно Алисы и Боба
     //Открытые ключи вычислыются по формуле: Ya = (g^(Xa)) mod P
 
-    public static int funcDifHel(int Xa, int Xb, int p, int g) {
+    public static long funcDifHel(long Xa, long Xb, long p, long g) {
         //Вычисляем открытые ключи и шлём друг другу:
-        int Ya = powMod(g, Xa, p);
-        int Yb = powMod(g, Xb, p);
+        long Ya = powMod(g, Xa, p);
+        long Yb = powMod(g, Xb, p);
         //Вычисляем общий секретный ключ:
-        int Zab = powMod(Yb, Xa, p);
-        int Zba = powMod(Ya, Xb, p);
+        long Zab = powMod(Yb, Xa, p);
+        long Zba = powMod(Ya, Xb, p);
         System.out.println("Ключ Алисы: " + Zab + ", Ключ Боба: " + Zba);
         return Zab;
     }
@@ -101,14 +109,14 @@ public class Main {
     //Проверка на простоту(тест Миллера-Рабина):
     // Возвращает ложь, если n - составное. Если возвращает истину, то n вероятно простое. Вероятность увеличивается
     //с увеличением k
-    static boolean isPrime(int n, int k) {
+    static boolean isPrime(long n, long k) {
         if (n <= 1 || n == 4)
             return false;
         if (n <= 3)
             return true;
         // Find r such that n = 2^d * r + 1
         // for some r >= 1
-        int d = n - 1;
+        long d = n - 1;
 
         while (d % 2 == 0)
             d /= 2;
@@ -120,12 +128,12 @@ public class Main {
         return true;
     }
 
-    static boolean miillerTest(int d, int n) {
+    static boolean miillerTest(long d, long n) {
         // Pick a random number in [2..n-2]
         // Corner cases make sure that n > 4
-        int a = 2 + (int) (Math.random() % (n - 4));
+        long a = 2 + (long) (Math.random() % (n - 4));
         // Compute a^d % n
-        int x = powMod(a, d, n);
+        long x = powMod(a, d, n);
         if (x == 1 || x == n - 1)
             return true;
         // Keep squaring x while one of the
@@ -147,9 +155,9 @@ public class Main {
     //Находим g, p:
     //G - первообразный корень по модулю P
     //вообще эти числа прописаны в стандартах, их не надо вот так каждый раз вычислять.
-    public static int[] getGP() {
-        int G, P;
-        int Q = getLargePrimeNum();
+    public static long[] getGP() {
+        long G, P;
+        long Q = getLargePrimeNum();
         P = (2 * Q) + 1;
         while (!isPrime(P, 3)) {
             Q = getLargePrimeNum();
@@ -158,37 +166,51 @@ public class Main {
         for (G = 2; ; G += 1) {
             if (powMod(G, Q, P) == 1) break;//получили нужный G -> break
         }
-        int[] arr = {G, P};
+        long[] arr = {G, P};
         return arr;
     }
 
-    public static int getLargePrimeNum() {
-        int l = (int) pow(2, 31);
-        int n = 0;
+    public static long getLargePrimeNum() {
+        long l = (long) pow(2, 40);
+        long n = 0;
         do {
-            n = (int) (Math.random() * l);
+            n = (long) (Math.random() * l);
         } while (!isPrime(n, 4));
         return n;
     }
-//   алгоритм "Шаг младенца, шаг великана"
-   public static int babystep(int  a, int  p, int  y) {
 
-        int  k = (int)Math.sqrt((double)p) +1 ;
-        Map<Integer, Integer> vals = new HashMap<Integer, Integer>();
-        vals.put(10, 13);
-        vals.put(10, 35);
-        for (int i = 1; i <= k; i++)
-        //первый ряд(индекс и значение)
-        vals.put(powMod(a, i * k, p), i);
-
-        for (int j = 0; j <= k; ++j) {
-            int  cur = (powMod(a, j, p) * y) % p; //второй ряд
-            if (vals.containsKey(cur) ) {//если совпали то берется индекс
-                int ans = vals.get(cur) * k - j; //x = i*m-j где m == k
-                if (ans < p)
-                    return ans;
+    //   алгоритм "Шаг младенца, шаг великана"
+    // ищем x в выражении y = a^x mod p по данным a, p, y.
+    public static long babyStep(long a, long p, long y) {
+//1:
+        long k = (long) Math.ceil(Math.sqrt((double) p));//m = k = sqrt(p)
+        System.out.println("\nInside babyStep(): k = m = " + k);
+//2:
+        long[] ya = new long[(int) k];
+        long[] am = new long[(int) k];
+        for (int j = 0; j <= (k - 1); j++) {
+            ya[j] = (y * powMod(a, j, p)) % p;
+            System.out.println("ya[j] = " + ya[j]);
+        }
+        for (int i = 0; i < k; i++) {
+            am[i] = powMod(a, (i + 1) * k, p);
+            System.out.println("am[i] = " + am[i]);
+        }
+//3: Ищем i & j такие, что a^(i*m) == a^(j)*y Здесь опять наверное имеется в виду, что от второго берётся % p...
+//Число x = i*m - j - решение уравнения a^x = y(mod P), т.е. то, что должна находить функция babyStep
+        Map<Long, Long> dict = new HashMap<Long, Long>();
+        for (int i = 0; i < k; ++i) {
+            dict.put(ya[i], (long) i);
+        }
+        for (int i = 0; i < k; ++i) {//там какая-то хрень с индексами... В методичке написано, что во втором массиве
+            //(с индексами i, видимо) индексация идёт с 1. Т.о. принял решение просто прибавить 1 к i в return
+            System.out.println("i = " + i);
+            if (dict.containsKey(am[i])) {
+                System.out.println(" i = " + i + ", dict[am[" + i + "] = dict.get(am[" + i + "] = " + dict.get(am[i]));
+                return (i + 1) * k - dict.get(am[i]);
             }
         }
+        System.out.println("Couldn't solve");
         return -1;
     }
 }
