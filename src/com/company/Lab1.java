@@ -1,5 +1,6 @@
 package com.company;
 
+import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -8,8 +9,8 @@ import static java.lang.Math.pow;
 public class Lab1 {
 
     public static void main(String[] args) {
-        System.out.println("a^x mod p = " + powMod(3, 100, 7));
-        System.out.println("a^x mod p = " + powMod(2, 34, 61));
+        System.out.println("a^x mod p = " + powModMine(3, 100, 7));
+        System.out.println("a^x mod p = " + powModMine(2, 34, 61));
         long[] g = generEucl(28, 8);
         System.out.println("gcd(a, b) = " + g[0] + ", x = " + g[1] + ", y = " + g[2]);
         long[] g2 = invers(11, 7);
@@ -36,24 +37,71 @@ public class Lab1 {
     }
 
     //метод для вычисления возведения в степень по модулю:
-    public static long powMod(long a, long x, long p) {
-        long y = 1;
+    public static long powModMine(long a, long x, long p) {
+        BigInteger y = new BigInteger("1");
+        BigInteger s = BigInteger.valueOf(a);
+        BigInteger pp = BigInteger.valueOf(p);
+        while (x > 0) {//попробую лучше сдвигать икс
+            if ((x & 1) >= 1) {//вычленяю из икс степени двойки(перемножая икс по очереди на эти степени в
+                // двоичном виде). Как только нахожу, что степень есть в составе икс(стоит единичка в двоичном
+                // представлении икс), то умножаю её на соответсвующий
+                //остаток от s(a) в этой степени(на каждой итерации s принимает значение этого остатка, а из этих
+                // значений соответственно составлен ряд a^1, a^2, ... a^ последняя, по этому ряду можно то же делать
+                // на бумаге) .
+                //y = (y * s) % p;
+                y = y.multiply(s).mod(pp) ;
+                // y = ((y % p) * (y % p)) % p;
+            }
+            x >>= 1;
+            //s = (s * s) % p;
+            s = s.multiply(s).mod(pp);
+            //  s = ((s % p) * (s % p)) % p;
+        }
+        return y.longValue();
+       /* long y = 1;
         long s = a;
-        long counter = 1;
-        for (long i = 1; i <= pow(i, 63); i *= 2) {//31 - число значащих битов в int, 63 в long... а может и 64...
-            //System.out.println(counter++ +") x & i = "+ (x & i));// не уверен насчёт байтов(их числа для подсчёта)
-            if ((x & i) >= 1) {//вычленяю из икс степени двойки(перемножая икс по очереди на эти степени в
+        //пожалуй, эта реализация не очень удачная...
+        //for (long i = 1; i <= pow(i, 63); i *= 2) {//31 - число значащих битов в int, 63 в long... а может и 64...
+        while (x > 0) {//попробую лучше сдвигать икс
+            if ((x & 1) >= 1) {//вычленяю из икс степени двойки(перемножая икс по очереди на эти степени в
                 // двоичном виде). Как только нахожу, что степень есть в составе икс(стоит единичка в двоичном
                 // представлении икс), то умножаю её на соответсвующий
                 //остаток от s(a) в этой степени(на каждой итерации s принимает значение этого остатка, а из этих
                 // значений соответственно составлен ряд a^1, a^2, ... a^ последняя, по этому ряду можно то же делать
                 // на бумаге) .
                 y = (y * s) % p;
+               // y = ((y % p) * (y % p)) % p;
             }
+            x >>= 1;
             s = (s * s) % p;
+          //  s = ((s % p) * (s % p)) % p;
         }
-        return y;
+        return y;*/
     }
+
+    public static long powModMineUsingBigInteger(long a, long x, long p) {
+        BigInteger y = new BigInteger("1");
+        BigInteger s = BigInteger.valueOf(a);
+        BigInteger pp = BigInteger.valueOf(p);
+        while (x > 0) {//попробую лучше сдвигать икс
+            if ((x & 1) >= 1) {//вычленяю из икс степени двойки(перемножая икс по очереди на эти степени в
+                // двоичном виде). Как только нахожу, что степень есть в составе икс(стоит единичка в двоичном
+                // представлении икс), то умножаю её на соответсвующий
+                //остаток от s(a) в этой степени(на каждой итерации s принимает значение этого остатка, а из этих
+                // значений соответственно составлен ряд a^1, a^2, ... a^ последняя, по этому ряду можно то же делать
+                // на бумаге) .
+                //y = (y * s) % p;
+                y = y.multiply(s).mod(pp) ;
+                // y = ((y % p) * (y % p)) % p;
+            }
+            x >>= 1;
+           //s = (s * s) % p;
+            s = s.multiply(s).mod(pp);
+            //  s = ((s % p) * (s % p)) % p;
+        }
+        return y.longValue();
+    }
+
     public static long gcd2(long p, long q) {// простой алгоритм Евклида
         while (q != 0) {
             long temp = q;
@@ -82,6 +130,7 @@ public class Lab1 {
         }
         return u;
     }
+
     public static long generEuclInt(long a, long b) {
         long[] u = {a, 1, 0};
         long[] v = {b, 0, 1};
@@ -114,7 +163,7 @@ public class Lab1 {
             System.arraycopy(v, 0, u, 0, 2);
             System.arraycopy(t, 0, v, 0, 2);
         }
-        if(u[1]<0){
+        if (u[1] < 0) {
             u[1] = u[1] + m;
         }
         return u;
@@ -128,11 +177,11 @@ public class Lab1 {
 
     public static long funcDifHel(long Xa, long Xb, long p, long g) {
         //Вычисляем открытые ключи и шлём друг другу:
-        long Ya = powMod(g, Xa, p);
-        long Yb = powMod(g, Xb, p);
+        long Ya = powModMine(g, Xa, p);
+        long Yb = powModMine(g, Xb, p);
         //Вычисляем общий секретный ключ:
-        long Zab = powMod(Yb, Xa, p);
-        long Zba = powMod(Ya, Xb, p);
+        long Zab = powModMine(Yb, Xa, p);
+        long Zba = powModMine(Ya, Xb, p);
         System.out.println("Ключ Алисы: " + Zab + ", Ключ Боба: " + Zba);
         return Zab;
     }
@@ -164,7 +213,7 @@ public class Lab1 {
         // Corner cases make sure that n > 4
         long a = 2 + (long) (Math.random() % (n - 4));
         // Compute a^d % n
-        long x = powMod(a, d, n);
+        long x = powModMine(a, d, n);
         if (x == 1 || x == n - 1)
             return true;
         // Keep squaring x while one of the
@@ -195,14 +244,14 @@ public class Lab1 {
             P = 2 * Q + 1;
         }
         for (G = 2; ; G += 1) {
-            if (powMod(G, Q, P) == 1) break;//получили нужный G -> break
+            if (powModMine(G, Q, P) == 1) break;//получили нужный G -> break
         }
         long[] arr = {G, P};
         return arr;
     }
 
     public static long getLargePrimeNum() {
-        long l = (long) pow(2, 40);
+        long l = (long) pow(2, 20);//Задаю порядок возвращаемого числа в виде степени двойки
         long n = 0;
         do {
             n = (long) (Math.random() * l);
@@ -220,11 +269,11 @@ public class Lab1 {
         long[] ya = new long[(int) k];
         long[] am = new long[(int) k];
         for (int j = 0; j <= (k - 1); j++) {
-            ya[j] = (y * powMod(a, j, p)) % p;
+            ya[j] = (y * powModMine(a, j, p)) % p;
             System.out.println("ya[j] = " + ya[j]);
         }
         for (int i = 0; i < k; i++) {
-            am[i] = powMod(a, (i + 1) * k, p);
+            am[i] = powModMine(a, (i + 1) * k, p);
             System.out.println("am[i] = " + am[i]);
         }
 //3: Ищем i & j такие, что a^(i*m) == a^(j)*y Здесь опять наверное имеется в виду, что от второго берётся % p...
