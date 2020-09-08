@@ -5,7 +5,7 @@ import java.util.Map;
 
 import static java.lang.Math.pow;
 
-public class Main {
+public class Lab1 {
 
     public static void main(String[] args) {
         System.out.println("a^x mod p = " + powMod(3, 100, 7));
@@ -32,7 +32,7 @@ public class Main {
         System.out.println("babystep(15, 23, 19) = " + babyStep(15, 23, 19));// 19
         System.out.println("babystep(19, 23, 10) = " + babyStep(19, 23, 10));// 9
         System.out.println("babystep(3, 7, 4) = " + babyStep(3, 7, 4));// 4 incorrect. Must be 100. Ryabko*/
-        System.out.println("babystep(5, 7, 1) = " + babyStep(5, 7, 1));// 6 incorrect. Must be 12.
+        System.out.println("babystep(5, 7, 1) = " + babyStepGiantStep(5, 7, 1));// 6 incorrect. Must be 12.
     }
 
     //метод для вычисления возведения в степень по модулю:
@@ -40,7 +40,7 @@ public class Main {
         long y = 1;
         long s = a;
         long counter = 1;
-        for (int i = 1; i <= pow(i, 31); i *= 2) {//31 - число значащих битов в int
+        for (long i = 1; i <= pow(i, 63); i *= 2) {//31 - число значащих битов в int, 63 в long
             //System.out.println(counter++ +") x & i = "+ (x & i));// не уверен насчёт байтов(их числа для подсчёта)
             if ((x & i) >= 1) {
                 y = (y * s) % p;
@@ -48,6 +48,14 @@ public class Main {
             s = (s * s) % p;
         }
         return y;
+    }
+    public static long gcd2(long p, long q) {// простой алгоритм Евклида
+        while (q != 0) {
+            long temp = q;
+            q = p % q;
+            p = temp;
+        }
+        return p;
     }
 
     //Утверждение 4: Пусть a & b - два целых положительных числа. Тогда существуют целые x & y, такие,
@@ -69,6 +77,21 @@ public class Main {
         }
         return u;
     }
+    public static long generEuclInt(long a, long b) {
+        long[] u = {a, 1, 0};
+        long[] v = {b, 0, 1};
+        long q = 0;
+        long[] t = {0, 0, 0};
+        while (v[0] != 0) {
+            q = u[0] / v[0];
+            t[0] = u[0] % v[0];
+            t[1] = u[1] - q * v[1];
+            t[2] = u[2] - q * v[2];
+            System.arraycopy(v, 0, u, 0, 3);
+            System.arraycopy(t, 0, v, 0, 3);
+        }
+        return u[0];
+    }
 
     //Поиск Инверсии - это тот же обобщённый алгоритм Евклида, только ответ не м.б. отрицательным
     //Для заданных чисел c & m (с & m - взаимно простые) число d (0 < d < m) называется инверсией числа по модулю m,
@@ -85,6 +108,9 @@ public class Main {
             t[1] = u[1] - q * v[1];
             System.arraycopy(v, 0, u, 0, 2);
             System.arraycopy(t, 0, v, 0, 2);
+        }
+        if(u[1]<0){
+            u[1] = u[1] + m;
         }
         return u;
     }
@@ -110,7 +136,7 @@ public class Main {
     // Возвращает ложь, если n - составное. Если возвращает истину, то n вероятно простое. Вероятность увеличивается
     //с увеличением k
     static boolean isPrime(long n, long k) {
-        if (n <= 1 || n == 4)
+        if (n <= 1 || n == 4)//сначала простые проверки на числа от 1 до 4, потом на чётность(чётные отметаются)
             return false;
         if (n <= 3)
             return true;
@@ -181,7 +207,7 @@ public class Main {
 
     //   алгоритм "Шаг младенца, шаг великана"
     // ищем x в выражении y = a^x mod p по данным a, p, y.
-    public static long babyStep(long a, long p, long y) {
+    public static long babyStepGiantStep(long a, long p, long y) {
 //1:
         long k = (long) Math.ceil(Math.sqrt((double) p));//m = k = sqrt(p)
         System.out.println("\nInside babyStep(): k = m = " + k);
