@@ -41,9 +41,7 @@ public class Lab2 {
         return x4;
     }
 
-
-    public static void cypherElGamal() {
-
+    public static void cypherElGamalShowLab() {
         long[] gp = getGP();
         long G = gp[0];
         long P = gp[1];
@@ -62,7 +60,7 @@ public class Lab2 {
         System.out.println(" m' = " + mShtrih);
     }
 
-    public static void cypherRSA() {
+    public static void cypherRSAShowLab() {
         long P = getLargePrimeNum();//Bob initializes P, Q, N, F, d < F, gcd(d, F) = 1, c, c*d mod F = 1
         long Q = getLargePrimeNum();//N & d - open, c - closed key
         // System.out.println("P = " + P);
@@ -85,46 +83,30 @@ public class Lab2 {
         System.out.println("in RSA cypher m' = " + mStrih);
     }
 
+    public static void cypherVernamShowLab() {// в этом фире предполагается, что получающая сторона владеет ключом изначально
+        System.out.println("Vernam's cypher: ");
+        long key = getLargePrimeNum(50);
+        long m = 123456789123456L;
+        System.out.println("m = " + m);
+        long e = m ^ key;// ^ - bitwise excluding OR// побитовое исключающее ИЛИ
+        System.out.println("e = " + e);
+        long mi = e ^ key;
+        System.out.println("mi = " + mi);
+    }
+
     public static void main(String[] args) {
-        Shamir sh = new Shamir();
-        try  {
-            var in = new DataInputStream(new FileInputStream("/home/stepa/Documents/projetcs/ZI_01/text.txt"));
-            byte[] bb = in.readAllBytes();
-            for (int i = 0; i < bb.length; i++) {
-                System.out.println(i + " in. = " + bb[i]);
-                byte ln = (byte) (bb[i] & 0xff);
-                byte x3 = sh.cypherShamir(ln);
-                //System.out.println("x3 = " + x3);
-                bb[i] = (byte) x3;//не факт, что это приведение типов сработает правильно...
-                System.out.println(i + " out = " + bb[i]);
-            }
-            in.close();
-            DataOutputStream out = new DataOutputStream(new FileOutputStream("textChanged.txt"));
-            out.write(bb);
-            out.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.out.println("Does the file exist?");
-        }
-        try {
-            var in = new DataInputStream(new FileInputStream("/home/stepa/Documents/projetcs/ZI_01/textChanged.txt"));
-            byte[] bb = in.readAllBytes();
-            for (int i = 0; i < bb.length; i++) {
-                System.out.println(i + " in. = " + bb[i]);
-                long ln = bb[i] & 0xff;
-                long x4 = sh.decypherShamir(ln);
-               // System.out.println("x4 = " + x4);
-                bb[i] = (byte) x4;//не факт, что это приведение типов сработает правильно...
-                System.out.println(i + " out = " + bb[i]);
-            }
-            in.close();
-            DataOutputStream out = new DataOutputStream(new FileOutputStream("/home/stepa/Documents/projetcs/ZI_01/textChangedDecyphered.txt"));
-            out.write(bb);
-            out.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.out.println("Does the file exist?");
-        }
+     //  ShamirChar sh = new ShamirChar();
+      // sh.executeShamir();
+/*        ShamirByteToInt sh = new ShamirByteToInt();
+        sh.executeShamir();
+        byte bt = -5;
+        int intbt = Byte.toUnsignedInt(bt);
+        System.out.println("int intbt = Byte.toUnsignedInt(bt); = " + intbt);
+
+        int x4 = 209;
+        byte x4b = (byte) (x4 & 0x00000ff);
+        System.out.println("x4b inside main = " + x4b);*/
+
        /* Scanner sc;
         try { var in = new FileInputStream("/home/stepa/Documents/projetcs/ZI_01/text.txt");
             sc = new Scanner(in, "UTF-8");

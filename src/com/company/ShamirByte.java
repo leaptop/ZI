@@ -4,8 +4,8 @@ import static com.company.Lab1.*;
 import static com.company.Lab1.powModMine;
 import static java.lang.Math.pow;
 
-public class Shamir {
-    public Shamir() {
+public class ShamirByte {
+    public ShamirByte() {
         p = getPrimeByte();
         pmo = (byte) (p - 1);
         do {
@@ -30,6 +30,7 @@ public class Shamir {
             n = (byte) (Math.random() * l);
             if (n < 0) n *= -1;
         } while (!isPrime(n, 4) && (p > m));
+        System.out.println("inside getPrimeByte n = " + n);
         return n;
     }
 
@@ -44,16 +45,30 @@ public class Shamir {
     public byte x2;
     public byte x3;
     public byte x4;
+//метод для непосредственной работы с файлами:
+    public byte cypherShamir(byte m) {// Сюда может быть передано отрицательное число, это проблема...
+        this.m =  m;
+        System.out.println("m = " +m);
+        System.out.println("ca = " + ca);
+        System.out.println("da = " + da);
+        System.out.println("p = " + p);
+        System.out.println("pmo = " + pmo);
+        System.out.println("cb = " + cb);
+        System.out.println("db = " + db);
 
-    public byte cypherShamir(byte m) {//метод для непосредственной работы с файлами
-        this.m = (byte) m;
+
         x1 = (byte) powModMine((long) m, (long) ca, (long) p);// A -> B (A вычисляет x1, шлёт Бобу, дальше аналогично)
         x2 = (byte) powModMine(x1, cb, p);// B -> A
         x3 = (byte) powModMine(x2, da, p);// A -> B. Пусть остановка будет здесь, т.е. зашифрованный файл будет
         // хранить в себе значения х3
         //long x4 = powModMine(x3, db, p);// Bob расшифровывает x4, x4 должен быть равен m в итоге
+        System.out.println("x1 = " + x1);
+        System.out.println("x2 = " + x2);
+        System.out.println("x3 = " + x3);
+        System.out.println("x4 = " + x4);
         return x3;
     }
+
 
     public byte decypherShamir(long m) {
         this.m = (byte) m;
