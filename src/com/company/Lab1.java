@@ -3,6 +3,8 @@ package com.company;
 import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
+import static com.company.Lab2.*;
+import static com.company.ShamirChar.*;
 
 import static java.lang.Math.pow;
 
@@ -199,6 +201,40 @@ public class Lab1 {
         long[] arr = {G, P};
         return arr;
     }
+    public static char getPrimeChar() {
+        char l = (char) ((char) pow(2, 17) - 1);//Задаю порядок возвращаемого числа в виде степени двойки
+        char n = 0;
+        do {
+            n = (char) (Math.random() * l);
+            if (n < 0) n *= -1;
+        } while (!isPrime(n, 4));
+        // System.out.println("inside getPrimeByte n = " + n);
+        return n;
+    }
+    public static char getPrimeChar(int powerOfTwo) {
+        char l = (char) ((char) pow(2, powerOfTwo) - 1);//Задаю порядок возвращаемого числа в виде степени двойки
+        char n = 0;
+        do {
+            n = (char) (Math.random() * l);
+            if (n < 0) n *= -1;
+        } while (!isPrime(n, 4) );
+        // System.out.println("inside getPrimeByte n = " + n);
+        return n;
+    }
+    public static long[] getGPChar() {
+        char G, P;
+        char Q = getPrimeChar();
+        P = (char) (((char)2 * Q) + (char)1);
+        while (!isPrime(P, 3)) {
+            Q = getPrimeChar();
+            P =(char) (2 * Q + 1);
+        }
+        for (G = 2; ; G += 1) {
+            if (powModMine(G, Q, P) == 1) break;
+        }
+        long[] arr = {G, P};
+        return arr;
+    }
 
     public static long getLargePrimeNum() {
         long l = (long) pow(2, 20);
@@ -220,7 +256,6 @@ public class Lab1 {
 
 
     public static long babyStepGiantStep(long a, long p, long y) {
-
         long k = (long) Math.ceil(Math.sqrt((double) p));//m = k = sqrt(p)
         System.out.println("\nInside babyStep(): k = m = " + k);
         int cnt1 = 0;
@@ -238,7 +273,6 @@ public class Lab1 {
             am[i] = powModMine(a, (i + 1) * k, p);
             // System.out.println("am[i] = " + am[i]);
         }
-
         Map<Long, Long> dict = new HashMap<Long, Long>();
         for (int i = 0; i < k; ++i) {
             dict.put(ya[i], (long) i);
@@ -251,7 +285,7 @@ public class Lab1 {
                 System.out.println("p = " + p + ", (sqrt(P) * log2(P)) = " + Math.sqrt((double) p) * customLog(2, (double) p));
                 System.out.println("cnt1 = " + cnt1);
                 System.out.println("cnt2 = " + cnt2);
-                System.out.println("cnt1 = " + cnt3);
+                System.out.println("cnt3 = " + cnt3);
                 return (i + 1) * k - dict.get(am[i]);
             }
         }
