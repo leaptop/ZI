@@ -23,11 +23,11 @@ public class RSAChar {
 
     char P;
     char Q;
-    char N;
+    char N;//N - open
     char F;
-    char d;
+    char d;//d - open
     //P = 3; Q = 11; N = P*Q; F = (P-1)*(Q-1); d = 3;//it works with these parameters...
-    char c;
+    char c;//c - closed
     char m;
     char e;
     char mStrih;
@@ -49,7 +49,6 @@ public class RSAChar {
         } while (d > F || gcd2(d, F) != 1);
         // P = 3; Q = 11; N = (char) (P*Q); F = (char) ((P-1)*(Q-1)); d = 3;//it works with these parameters...
         c = (char) invers(F, d)[1];//c - closed //Bob works up until here
-
         //m = 15;//Alice sends m to Bob. m < N
         e = (char) powModMine(m, d, N);//Alice uses Bob's keys to make e and sends it to him
         return e;

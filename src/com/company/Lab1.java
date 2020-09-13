@@ -56,12 +56,19 @@ public class Lab1 {
         BigInteger s = BigInteger.valueOf(a);
         BigInteger pp = BigInteger.valueOf(p);
         while (x > 0) {
-            if ((x & 1) >= 1) {
+            if ((x & 1) >= 1) {//вычленяю из икс степени двойки(перемножая икс по очереди на эти степени в
+                // двоичном виде). Как только нахожу, что степень есть в составе икс(стоит единичка в двоичном
+                // представлении икс), то умножаю её на соответсвующий
+                //остаток от s(a) в этой степени(на каждой итерации s принимает значение этого остатка, а из этих
+                // значений соответственно составлен ряд a^1, a^2, ... a^ последняя, по этому ряду можно то же делать
+                // на бумаге) .
                 y = y.multiply(s).mod(pp);
             }
             x >>= 1;
             s = s.multiply(s).mod(pp);
-
+            //остаток от s(a) в этой степени(на каждой итерации s принимает значение этого остатка, а из этих
+            // значений соответственно составлен ряд a^1, a^2, ... a^ последняя, по этому ряду можно то же делать
+            // на бумаге) .
         }
         return y.longValue();
     }
@@ -79,8 +86,19 @@ public class Lab1 {
         }
         return y.longValue();
     }
+    public static BigInteger powModMBigInteger(BigInteger a, BigInteger x, BigInteger p) {
+        BigInteger y = new BigInteger("1");
+        BigInteger s = a;
+        BigInteger pp = p;
+       // while (x.compareTo(BigInteger.ZERO) > 0) {//Check if x > 0
+            //if ((x & 1) >= 1) {//Here I only have a BigInteger function getLowestSetBit, that returns the number
+            //of a bit with the first meaning "1". So the implementation is going to be different. Though, apparently
+            //there is also powMod function in the Biginteger library... So, I'll just return it))
+       // }
+        return a.modPow(x, p);
+    }
 
-    public static long gcd2(long p, long q) {
+    public static long gcd2(long p, long q) {// простой алгоритм Евклида
         if (p < 0 || q < 0) {
             System.out.println("                      inside gcd2(): p<0||q<0)");
         }
@@ -91,7 +109,21 @@ public class Lab1 {
         }
         return p;
     }
-
+    public static BigInteger gcd2BigInteger(BigInteger p, BigInteger q) {
+        if (p.compareTo(BigInteger.ZERO) < 0 || q.compareTo(BigInteger.ZERO) < 0) {
+            System.out.println("                      inside gcd2BigInteger(): p<0||q<0)");
+        }
+        while (q.compareTo(BigInteger.ZERO) != 0) {
+            BigInteger temp = q;
+            q = p.mod(q) ;
+            p = temp;
+        }
+        return p;
+    }
+    //Утверждение 4: Пусть a & b - два целых положительных числа. Тогда существуют целые x & y, такие,
+    // что ax + by = gcd(a, b)(greatest common divisor). Представленный далее метод возвращает вектор, на первом
+    // месте которого наибольший общий делитель, два других - x & y.
+    //метод для реализации обобщённого алгоритма Евклида(a>b, оба числа д.б. положительными) :
     public static long[] generEucl(long a, long b) {
         if (a < 0 || b < 00) {
             System.out.println("                               inside generEucl: (a < 0 || b < 0)");
@@ -126,7 +158,10 @@ public class Lab1 {
         }
         return u[0];
     }
-
+    //Поиск Инверсии - это тот же обобщённый алгоритм Евклида, только ответ не м.б. отрицательным
+    //Для заданных чисел c & m (с & m - взаимно простые) число d (0 < d < m) называется инверсией числа по модулю m,
+    //если выполняется условие c*d mod m = 1. c - чило, d - инверсия, m - модуль.
+    //Инверсия обозначается: d = (c^(-1))mod m. Метод нахождения инверсии(выход: первое число - gcd, второе - инверсия):
     public static long[] invers(long m, long c) {
         if (m < 0 || c < 0) {
             System.out.println("                                  inside invers(): m<0||c<0");
@@ -147,27 +182,36 @@ public class Lab1 {
         }
         return u;
     }
-
+    //Метод нахождения общего ключа по схеме Диффи-Хеллмана
+    //Есть А - Алиса и B - Боб. Алиса шлёт Бобу закодированное сообщение: 84.
+    //int p = 17, g = 3;// эти числа генерируются разработчиком системы
+    // Xa & Xb, Ya & Yb - закрытые и открытые ключи соответственно Алисы и Боба
+    //Открытые ключи вычислыются по формуле: Ya = (g^(Xa)) mod P
     public static long funcDifHel(long Xa, long Xb, long p, long g) {
+        //Вычисляем открытые ключи и шлём друг другу:
         long Ya = powModMine(g, Xa, p);
         long Yb = powModMine(g, Xb, p);
+        //Вычисляем общий секретный ключ:
         long Zab = powModMine(Yb, Xa, p);
         long Zba = powModMine(Ya, Xb, p);
         System.out.println("Ключ Алисы: " + Zab + ", Ключ Боба: " + Zba);
         return Zab;
     }
-
+    //Проверка на простоту(тест Миллера-Рабина):
+    // Возвращает ложь, если n - составное. Если возвращает истину, то n вероятно простое. Вероятность увеличивается
+    //с увеличением k
     static boolean isPrime(long n, long k) {
-        if (n <= 1 || n == 4)
+        if (n <= 1 || n == 4)//сначала простые проверки на числа от 1 до 4, потом на чётность(чётные отметаются)
             return false;
         if (n <= 3)
             return true;
-
+// Find r such that n = 2^d * r + 1
+        // for some r >= 1
         long d = n - 1;
 
         while (d % 2 == 0)
             d /= 2;
-
+// Iterate given nber of 'k' times
         for (int i = 0; i < k; i++)
             if (!miillerTest(d, n))
                 return false;
@@ -180,6 +224,29 @@ public class Lab1 {
         long x = powModMine(a, d, n);
         if (x == 1 || x == n - 1)
             return true;
+// Keep squaring x while one of the
+        // following doesn't happen
+        // (i) d does not reach n-1
+        // (ii) (x^2) % n is not 1
+        // (iii) (x^2) % n is not n-1
+        while (d != n - 1) {
+            // Pick a random number in [2..n-2]
+            // Corner cases make sure that n > 4
+            x = (x * x) % n;
+            d *= 2;
+            if (x == 1)
+                return false;
+            if (x == n - 1)
+                return true;
+        }
+        return false;
+    }
+    /*static boolean miillerTestBigInteger(BigInteger d, BigInteger n) {
+        BigInteger a = 2 +  (Math.random() % (n - 4));
+
+        BigInteger x = x.modPow(d, n);
+        if (x == 1 || x == n - 1)
+            return true;
 
         while (d != n - 1) {
             x = (x * x) % n;
@@ -190,8 +257,11 @@ public class Lab1 {
                 return true;
         }
         return false;
-    }
+    }*/
 
+    //Находим g, p:
+    //G - первообразный корень по модулю P
+    //вообще эти числа прописаны в стандартах, их не надо вот так каждый раз вычислять.
     public static long[] getGP() {
         long G, P;
         long Q = getLargePrimeNum();
@@ -201,7 +271,7 @@ public class Lab1 {
             P = 2 * Q + 1;
         }
         for (G = 2; ; G += 1) {
-            if (powModMine(G, Q, P) == 1) break;
+            if (powModMine(G, Q, P) == 1) break;//получили нужный G -> break
         }
         long[] arr = {G, P};
         return arr;
@@ -245,7 +315,7 @@ public class Lab1 {
     }
 
     public static long getLargePrimeNum() {
-        long l = (long) pow(2, 20);
+        long l = (long) pow(2, 20);//Задаю порядок возвращаемого числа в виде степени двойки
         long n = 0;
         do {
             n = (long) (Math.random() * l);
@@ -262,10 +332,13 @@ public class Lab1 {
         return n;
     }
 
-
+    //   алгоритм "Шаг младенца, шаг великана"
+    // ищем x в выражении y = a^x mod p по данным a, p, y.
     public static long babyStepGiantStep(long a, long p, long y) {
+        //1: Здесь всё тупо сделано по методичке
         long k = (long) Math.ceil(Math.sqrt((double) p));//m = k = sqrt(p)
         System.out.println("\nInside babyStep(): k = m = " + k);
+        //2:
         int cnt1 = 0;
         int cnt2 = 0;
         int cnt3 = 0;
@@ -281,11 +354,14 @@ public class Lab1 {
             am[i] = powModMine(a, (i + 1) * k, p);
             // System.out.println("am[i] = " + am[i]);
         }
+        //3: Ищем i & j такие, что a^(i*m) == a^(j)*y Здесь опять наверное имеется в виду, что от второго берётся % p...
+//Число x = i*m - j - решение уравнения a^x = y(mod P), т.е. то, что должна находить функция babyStep
         Map<Long, Long> dict = new HashMap<Long, Long>();
         for (int i = 0; i < k; ++i) {
             dict.put(ya[i], (long) i);
         }
-        for (int i = 0; i < k; ++i) {
+        for (int i = 0; i < k; ++i) {//там какая-то хрень с индексами... В методичке написано, что во втором массиве
+            //(с индексами i, видимо) индексация идёт с 1. Т.о. принял решение просто прибавить 1 к i в return
             cnt3++;
             //System.out.println("i = " + i);
             if (dict.containsKey(am[i])) {
