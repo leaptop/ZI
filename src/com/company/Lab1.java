@@ -3,6 +3,7 @@ package com.company;
 import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 import static com.company.Lab2.*;
 import static com.company.ShamirChar.*;
@@ -289,6 +290,20 @@ public class Lab1 {
             if (powModMine(G, Q, P) == 1) break;
         }
         char[] arr = {G, P};
+        return arr;
+    }
+    public static BigInteger[] getGPBigInteger() {
+        BigInteger Q, G, P;
+        Random rnd = new Random();
+        do{
+             Q = BigInteger.probablePrime(20, rnd);
+            P = ((Q.multiply(BigInteger.valueOf(2l))).add(BigInteger.ONE));
+        }while(P.isProbablePrime(10));
+
+        for (G = BigInteger.TWO; ;G = G.add(BigInteger.ONE)) {
+            if ((G.modPow(Q, P)).compareTo(BigInteger.ONE) == 0) break;
+        }
+        BigInteger[] arr = {G, P};
         return arr;
     }
 

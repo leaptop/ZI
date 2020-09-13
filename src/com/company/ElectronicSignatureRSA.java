@@ -48,7 +48,7 @@ public class ElectronicSignatureRSA {
         c = d.modInverse(F);//c - closed //Bob works up until here. my implementation would be: c = (char) invers(F, d)[1];
         String content = "";
         try {
-            content = new String(Files.readAllBytes(Paths.get("textToCiph.txt")));//got a string of bytes from the hashed file
+            content = new String(Files.readAllBytes(Paths.get("binaryPDF.pdf")));//"textToCiph.txt")));//got a string of bytes from the hashed file
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -63,7 +63,7 @@ public class ElectronicSignatureRSA {
         System.out.println("s        = " + s);
     }
 
-    public void checkSign() {// if the sign is correct, then e equals to h
+    public void checkSign() {// Bob checks if the signature is correct. If the sign is correct, then e equals to h
         e = s.modPow(d, N);
         String str = (String.valueOf(e));
         BigInteger toHex = new BigInteger(str, 10);
