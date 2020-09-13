@@ -6,7 +6,7 @@ import java.util.Scanner;
 import static com.company.Lab1.*;
 
 public class Lab2 {
-    public static long cypherShamirShowLab(long m) {//
+    public static long cipherShamirShowLab(long m) {//
         long p = getLargePrimeNum();//Алиса генерирует р, шлёт его Бобу
         //System.out.println("p = " + p);// Алиса генерирует простое число p. Теперь ей надо сгенерировать взаимно простое
         // с (p - 1) число ca. Делается это с помощью обобщённого алгоритма Евклида. Т.е. надо генерировать случайные
@@ -41,7 +41,7 @@ public class Lab2 {
         return x4;
     }
 
-    public static void cypherElGamalShowLab() {
+    public static void cipherElGamalShowLab() {
         long[] gp = getGP();
         long G = gp[0];
         long P = gp[1];
@@ -60,7 +60,7 @@ public class Lab2 {
         System.out.println(" m' = " + mShtrih);
     }
 
-    public static void cypherRSAShowLab() {
+    public static void cipherRSAShowLab() {
         long P = getLargePrimeNum();//Bob initializes P, Q, N, F, d < F, gcd(d, F) = 1, c, c*d mod F = 1
         long Q = getLargePrimeNum();//N & d - open, c - closed key
         // System.out.println("P = " + P);
@@ -77,13 +77,13 @@ public class Lab2 {
         //P = 3; Q = 11; N = P*Q; F = (P-1)*(Q-1); d = 3;//it works with these parameters...
         long c = invers(F, d)[1];
         // System.out.println("инверсия d по модулю F: c = " + c);
-        long m = 15;//Alice sends m to Bob. m < N
+        long m = 1103;//Alice sends m to Bob. m < N
         long e = powModMineUsingBigInteger(m, d, N);//Alice uses Bob's keys to make e and sends it to him
         long mStrih = powModMineUsingBigInteger(e, c, N);//Bob deciphers it and gets m
         System.out.println("in RSA cypher m' = " + mStrih);
     }
 
-    public static void cypherVernamShowLab() {// в этом фире предполагается, что получающая сторона владеет ключом изначально
+    public static void cipherVernamShowLab() {// в этом фире предполагается, что получающая сторона владеет ключом изначально
         System.out.println("Vernam's cypher: ");
         long key = getLargePrimeNum(50);
         long m = 123456789123456L;
@@ -95,6 +95,7 @@ public class Lab2 {
     }
 
     public static void main(String[] args) {
+        cipherRSAShowLab();
      //  ShamirChar sh = new ShamirChar();
       // sh.executeShamir();
 /*        ShamirByteToInt sh = new ShamirByteToInt();

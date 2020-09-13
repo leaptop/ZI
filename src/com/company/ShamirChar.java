@@ -3,13 +3,11 @@ package com.company;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Scanner;
 
 import static com.company.Lab1.*;
 import static com.company.Lab1.powModMine;
-import static java.lang.Math.pow;
 
 public class ShamirChar {
     public ShamirChar() {
@@ -56,7 +54,7 @@ public class ShamirChar {
        // sch.executeCypherDecypherOnATextFile();
        // sch.cypherDecypherAnyFile();
         //sch.cypherDecypherAnyFileFinal();
-        sch.cypherDecypherAnyTXTFile();
+        sch.cipherDecipherAnyTXTFile();
 
     }
 
@@ -76,23 +74,23 @@ public class ShamirChar {
         return new BufferedOutputStream(new FileOutputStream(fileName, append));
     }
 
-    public  void cypherDecypherAnyFileFinal(){
+    public  void cipherDecipherAnyFileFinal(){
         String content;
         try {
-            content = new String(Files.readAllBytes(Paths.get("binaryPDF.pdf")));
+            content = new String(Files.readAllBytes(Paths.get("inversion.png")));
             //System.out.println(content);
             contentsInCharArray = content.toCharArray();
             contentsInCharArrayCyphered = new char[contentsInCharArray.length];
             for (int i = 0; i < contentsInCharArray.length; i++) {
-                contentsInCharArrayCyphered[i] = cypherShamir(contentsInCharArray[i]);
+                contentsInCharArrayCyphered[i] = cipher(contentsInCharArray[i]);
             }
-            System.out.println("Зашифрованное: ");
+            System.out.println("Зашифрованное в Шамире: ");
             for (int i = 0; i < contentsInCharArrayCyphered.length; i++) {
                 System.out.print(contentsInCharArrayCyphered[i]);
             }
             try {
                 // create a writer
-                FileOutputStream fos = new FileOutputStream(new File("binaryPDFCiphered.pdf"));
+                FileOutputStream fos = new FileOutputStream(new File("inversionCyphered.png"));
 
                 // write data to file
                 for (int i = 0; i < contentsInCharArrayCyphered.length; i++) {
@@ -107,16 +105,16 @@ public class ShamirChar {
             System.out.println("\n-----------------inside cypherDecypherAnyFile()---------------------------\n");
             contentsInCharArrayDecyphered = new char[contentsInCharArray.length];
             for (int i = 0; i < contentsInCharArray.length; i++) {
-                contentsInCharArrayDecyphered[i] = decypherShamir(contentsInCharArrayCyphered[i]);
+                contentsInCharArrayDecyphered[i] = decipher(contentsInCharArrayCyphered[i]);
             }
-            System.out.println("Расшифрованное: ");
+            System.out.println("Расшифрованное в Шамире: ");
             for (int i = 0; i < contentsInCharArrayDecyphered.length; i++) {
                 System.out.print(contentsInCharArrayDecyphered[i]);
             }//here I have a deciphered char array contentsInCharArrayDecyphered
 
             try {
                 // create a writer
-                FileOutputStream fos = new FileOutputStream(new File("binaryPDFDeciph.pdf"));
+                FileOutputStream fos = new FileOutputStream(new File("inversionDeciphered.png"));
 
                 // write data to file
                 for (int i = 0; i < contentsInCharArrayDecyphered.length; i++) {
@@ -138,23 +136,23 @@ public class ShamirChar {
         }
     }
 
-    public  void cypherDecypherAnyTXTFile(){
+    public  void cipherDecipherAnyTXTFile(){
         String content;
         try {
-            content = new String(Files.readAllBytes(Paths.get(Constants.FILENAME)));
+            content = new String(Files.readAllBytes(Paths.get("textToCiph.txt")));
             //System.out.println(content);
             contentsInCharArray = content.toCharArray();
             contentsInCharArrayCyphered = new char[contentsInCharArray.length];
             for (int i = 0; i < contentsInCharArray.length; i++) {
-                contentsInCharArrayCyphered[i] = cypherShamir(contentsInCharArray[i]);
+                contentsInCharArrayCyphered[i] = cipher(contentsInCharArray[i]);
             }
-            System.out.println("Зашифрованное: ");
+            System.out.println("Зашифрованное в Шамире: ");
             for (int i = 0; i < contentsInCharArrayCyphered.length; i++) {
                 System.out.print(contentsInCharArrayCyphered[i]);
             }
             try {
                 // create a writer
-                FileOutputStream fos = new FileOutputStream(new File("textCiphered.txt"));
+                FileOutputStream fos = new FileOutputStream(new File("textCipheredShamir.txt"));
 
                 // write data to file
                 for (int i = 0; i < contentsInCharArrayCyphered.length; i++) {
@@ -169,9 +167,9 @@ public class ShamirChar {
             System.out.println("\n-----------------inside cypherDecypherAnyTXTFile()---------------------------\n");
             contentsInCharArrayDecyphered = new char[contentsInCharArray.length];
             for (int i = 0; i < contentsInCharArray.length; i++) {
-                contentsInCharArrayDecyphered[i] = decypherShamir(contentsInCharArrayCyphered[i]);
+                contentsInCharArrayDecyphered[i] = decipher(contentsInCharArrayCyphered[i]);
             }
-            System.out.println("Расшифрованное: ");
+            System.out.println("Расшифрованное в Шамире: ");
             for (int i = 0; i < contentsInCharArrayDecyphered.length; i++) {
                System.out.print(contentsInCharArrayDecyphered[i]);
             }//here I have a deciphered char array contentsInCharArrayDecyphered
@@ -183,7 +181,7 @@ public class ShamirChar {
 
             try {
                 // create a writer
-                FileOutputStream fos = new FileOutputStream(new File("textDeciph.txt"));
+                FileOutputStream fos = new FileOutputStream(new File("textDecipheredShamir.txt"));
 
                 // write data to file
                 for (int i = 0; i < contentsInCharArrayDecyphered.length; i++) {
@@ -288,7 +286,7 @@ public class ShamirChar {
 
 
     //метод для непосредственной работы с файлами:
-    public char cypherShamir(char m) {// Сюда может быть передано отрицательное число, это проблема...
+    public char cipher(char m) {// Сюда может быть передано отрицательное число, это проблема...
         this.m = m;
         System.out.println("m = " + (int) m);
         x1 = powModMine((long) m, (long) ca, (long) p);// A -> B (A вычисляет x1, шлёт Бобу, дальше аналогично)
@@ -308,7 +306,7 @@ public class ShamirChar {
         return (char) x3;
     }
 
-    public char decypherShamir(char x3) {
+    public char decipher(char x3) {
         x4 = powModMine(x3, db, p);// Bob расшифровывает x4, x4 должен быть равен m в итоге
         System.out.println("x4 = " + x4);
         if (x4 > Character.MAX_VALUE || x4 < Character.MIN_VALUE) {
@@ -330,7 +328,7 @@ public class ShamirChar {
         }
     }
 
-    public void executeCypherDecypherOnATextFile() {
+    public void executeCipherDecipherOnATextFile() {
         checkParams();
         System.out.println("ca = " + (int) ca);
         System.out.println("da = " + (int) da);
@@ -356,9 +354,9 @@ public class ShamirChar {
         //System.out.println(contentsInCharArray);
         contentsInCharArrayCyphered = new char[contentsInCharArray.length];
         for (int i = 0; i < contentsInCharArray.length; i++) {
-            contentsInCharArrayCyphered[i] = cypherShamir(contentsInCharArray[i]);
+            contentsInCharArrayCyphered[i] = cipher(contentsInCharArray[i]);
         }
-        System.out.println("Зашифрованное: ");
+        System.out.println("Зашифрованное в Шамире: ");
         for (int i = 0; i < contentsInCharArrayCyphered.length; i++) {
             System.out.print(contentsInCharArrayCyphered[i]);
         }
@@ -366,9 +364,9 @@ public class ShamirChar {
         System.out.println("\n-----------------inside executeCypherDecypherOnATextFile()---------------------------\n");
         contentsInCharArrayDecyphered = new char[contentsInCharArray.length];
         for (int i = 0; i < contentsInCharArray.length; i++) {
-            contentsInCharArrayDecyphered[i] = decypherShamir(contentsInCharArrayCyphered[i]);
+            contentsInCharArrayDecyphered[i] = decipher(contentsInCharArrayCyphered[i]);
         }
-        System.out.println("Расшифрованное: ");
+        System.out.println("Расшифрованное в Шамире: ");
         for (int i = 0; i < contentsInCharArrayDecyphered.length; i++) {
             System.out.print(contentsInCharArrayDecyphered[i]);
         }

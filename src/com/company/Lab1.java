@@ -3,6 +3,7 @@ package com.company;
 import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
+
 import static com.company.Lab2.*;
 import static com.company.ShamirChar.*;
 
@@ -44,8 +45,12 @@ public class Lab1 {
 
     //метод для вычисления возведения в степень по модулю:
     public static long powModMine(long a, long x, long p) {
-        if (a < 0 || x < 0 || p < 0) {
-            System.out.println("                        inside powModMine(): (a<0||x<0||p<0)");
+        if (a < 0) {
+            System.out.println("                        inside powModMine(): a<0");
+        } else if (x < 0) {
+            System.out.println("                      inside powModMine():    x<0");
+        } else if (p < 0) {
+            System.out.println("                         inside powModMine():   p<0");
         }
         BigInteger y = new BigInteger("1");
         BigInteger s = BigInteger.valueOf(a);
@@ -201,6 +206,22 @@ public class Lab1 {
         long[] arr = {G, P};
         return arr;
     }
+
+    public static char[] getGPChar() {
+        char G, P;
+        char Q = getPrimeChar();
+        P = (char) ((2 * Q) + 1);
+        while (!isPrime(P, 3) && P > 0) {
+            Q = getPrimeChar();
+            P = (char) (2 * Q + 1);
+        }
+        for (G = 2; ; G += 1) {
+            if (powModMine(G, Q, P) == 1) break;
+        }
+        char[] arr = {G, P};
+        return arr;
+    }
+
     public static char getPrimeChar() {
         char l = (char) ((char) pow(2, 17) - 1);//Задаю порядок возвращаемого числа в виде степени двойки
         char n = 0;
@@ -211,29 +232,16 @@ public class Lab1 {
         // System.out.println("inside getPrimeByte n = " + n);
         return n;
     }
+
     public static char getPrimeChar(int powerOfTwo) {
         char l = (char) ((char) pow(2, powerOfTwo) - 1);//Задаю порядок возвращаемого числа в виде степени двойки
         char n = 0;
         do {
             n = (char) (Math.random() * l);
             if (n < 0) n *= -1;
-        } while (!isPrime(n, 4) );
+        } while (!isPrime(n, 4));
         // System.out.println("inside getPrimeByte n = " + n);
         return n;
-    }
-    public static long[] getGPChar() {
-        char G, P;
-        char Q = getPrimeChar();
-        P = (char) (((char)2 * Q) + (char)1);
-        while (!isPrime(P, 3)) {
-            Q = getPrimeChar();
-            P =(char) (2 * Q + 1);
-        }
-        for (G = 2; ; G += 1) {
-            if (powModMine(G, Q, P) == 1) break;
-        }
-        long[] arr = {G, P};
-        return arr;
     }
 
     public static long getLargePrimeNum() {
