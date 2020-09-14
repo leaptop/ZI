@@ -87,15 +87,16 @@ public class Lab1 {
         }
         return y.longValue();
     }
+
     public static BigInteger powModMBigInteger(BigInteger a, BigInteger x, BigInteger p) {
         BigInteger y = new BigInteger("1");
         BigInteger s = a;
         BigInteger pp = p;
-       // while (x.compareTo(BigInteger.ZERO) > 0) {//Check if x > 0
-            //if ((x & 1) >= 1) {//Here I only have a BigInteger function getLowestSetBit, that returns the number
-            //of a bit with the first meaning "1". So the implementation is going to be different. Though, apparently
-            //there is also powMod function in the Biginteger library... So, I'll just return it))
-       // }
+        // while (x.compareTo(BigInteger.ZERO) > 0) {//Check if x > 0
+        //if ((x & 1) >= 1) {//Here I only have a BigInteger function getLowestSetBit, that returns the number
+        //of a bit with the first meaning "1". So the implementation is going to be different. Though, apparently
+        //there is also powMod function in the Biginteger library... So, I'll just return it))
+        // }
         return a.modPow(x, p);
     }
 
@@ -110,17 +111,19 @@ public class Lab1 {
         }
         return p;
     }
+
     public static BigInteger gcd2BigInteger(BigInteger p, BigInteger q) {
         if (p.compareTo(BigInteger.ZERO) < 0 || q.compareTo(BigInteger.ZERO) < 0) {
             System.out.println("                      inside gcd2BigInteger(): p<0||q<0)");
         }
         while (q.compareTo(BigInteger.ZERO) != 0) {
             BigInteger temp = q;
-            q = p.mod(q) ;
+            q = p.mod(q);
             p = temp;
         }
         return p;
     }
+
     //Утверждение 4: Пусть a & b - два целых положительных числа. Тогда существуют целые x & y, такие,
     // что ax + by = gcd(a, b)(greatest common divisor). Представленный далее метод возвращает вектор, на первом
     // месте которого наибольший общий делитель, два других - x & y.
@@ -159,6 +162,7 @@ public class Lab1 {
         }
         return u[0];
     }
+
     //Поиск Инверсии - это тот же обобщённый алгоритм Евклида, только ответ не м.б. отрицательным
     //Для заданных чисел c & m (с & m - взаимно простые) число d (0 < d < m) называется инверсией числа по модулю m,
     //если выполняется условие c*d mod m = 1. c - чило, d - инверсия, m - модуль.
@@ -183,6 +187,7 @@ public class Lab1 {
         }
         return u;
     }
+
     //Метод нахождения общего ключа по схеме Диффи-Хеллмана
     //Есть А - Алиса и B - Боб. Алиса шлёт Бобу закодированное сообщение: 84.
     //int p = 17, g = 3;// эти числа генерируются разработчиком системы
@@ -198,6 +203,7 @@ public class Lab1 {
         System.out.println("Ключ Алисы: " + Zab + ", Ключ Боба: " + Zba);
         return Zab;
     }
+
     //Проверка на простоту(тест Миллера-Рабина):
     // Возвращает ложь, если n - составное. Если возвращает истину, то n вероятно простое. Вероятность увеличивается
     //с увеличением k
@@ -292,19 +298,49 @@ public class Lab1 {
         char[] arr = {G, P};
         return arr;
     }
+
     public static BigInteger[] getGPBigInteger() {
         BigInteger Q, G, P;
         Random rnd = new Random();
-        do{
-             Q = BigInteger.probablePrime(20, rnd);
+        do {
+            Q = BigInteger.probablePrime(20, rnd);
             P = ((Q.multiply(BigInteger.valueOf(2l))).add(BigInteger.ONE));
-        }while(P.isProbablePrime(10));
+        } while (P.isProbablePrime(10));
 
-        for (G = BigInteger.TWO; ;G = G.add(BigInteger.ONE)) {
+        for (G = BigInteger.TWO; ; G = G.add(BigInteger.ONE)) {
             if ((G.modPow(Q, P)).compareTo(BigInteger.ONE) == 0) break;
         }
         BigInteger[] arr = {G, P};
         return arr;
+    }
+
+    public static BigInteger[] getGPBigInteger(int qBitLength) {
+        BigInteger Q, G, P;//P = 2*Q + 1
+        Random rnd = new Random();
+        do {
+            Q = BigInteger.probablePrime(qBitLength, rnd);
+            P = ((Q.multiply(BigInteger.valueOf(2l))).add(BigInteger.ONE));
+        } while (P.isProbablePrime(10));
+//increase G starting from 2 until it satisfies G.modPow(Q, P) == 1 :
+        for (G = BigInteger.TWO; ; G = G.add(BigInteger.ONE)) {
+            if ((G.modPow(Q, P)).compareTo(BigInteger.ONE) == 0) break;
+        }
+        BigInteger[] arr = {G, P};
+        return arr;
+    }
+
+    public static BigInteger getABigInteger(BigInteger Q, BigInteger P, BigInteger b) {
+        BigInteger G = BigInteger.TWO;
+        BigInteger a;
+        for (; ; G = G.add(BigInteger.ONE)) {
+            a = (G.modPow(b, P));
+            if (a.compareTo(BigInteger.ONE) == 1) {
+                System.out.println("G = " + G);
+                break;
+            }
+        }
+
+        return a;
     }
 
     public static char getPrimeChar() {

@@ -24,9 +24,6 @@ public class ElectronicSignatureElGamal {
     //BigInteger m;// m должно быть меньше Р
     BigInteger k;
     BigInteger r;
-    BigInteger a;
-    BigInteger b;
-    BigInteger mShtrih;
     BigInteger hDecimal;
     String hHexadeci;
     BigInteger u;
@@ -59,12 +56,7 @@ public class ElectronicSignatureElGamal {
         r = G.modPow(k, P);
         u = (hDecimal.subtract(x.multiply(r))).mod(P.subtract(BigInteger.ONE));
         s = (k.modInverse(P.subtract(BigInteger.ONE))).mod(P.subtract(BigInteger.ONE));
-        //a = G.modPow(k, P);//a & b  вычисляются Алисой и шлются Бобу
-        //b = (y.modPow(k, P).multiply(m)).mod(P);
-       // BigInteger[] arr = {a, b};
-        //return arr;
     }
-
     public void checkSign() {
         System.out.println("The sign is correct check: " + ((y.modPow(r, P)).multiply(r.modPow(s, P)).compareTo(G.modPow(hDecimal, P)) == 0 ));
     }
