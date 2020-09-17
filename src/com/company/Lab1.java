@@ -5,9 +5,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
-import static com.company.Lab2.*;
-import static com.company.ShamirChar.*;
-
 import static java.lang.Math.pow;
 
 public class Lab1 {

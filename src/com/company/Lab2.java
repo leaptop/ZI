@@ -2,12 +2,46 @@ package com.company;
 
 import java.io.*;
 import java.util.Scanner;
+import java.util.function.LongBinaryOperator;
 
 import static com.company.Lab1.*;
 
 public class Lab2 {
+    public static void main(String[] args) {
+        cipherShamirShowLab(Long.MAX_VALUE-178L);
+        System.out.println("-----------------------------------");
+        //cipherRSAShowLab();
+        //  System.out.println("-----------------------------------");
+        //cipherVernamShowLab();
+        //System.out.println("-----------------------------------");
+
+        // cipherElGamalShowLab();
+        //  ShamirChar sh = new ShamirChar();
+        // sh.executeShamir();
+
+    }
+
+
+
     public static long cipherShamirShowLab(long m) {//
-        long p = getLargePrimeNum();//Алиса генерирует р, шлёт его Бобу
+        long p = getLargePrimeNum(50);//Алиса генерирует р, шлёт его Бобу
+        System.out.println("p  = "+ p);
+        long m0, m1;
+        if (m > p) {
+            m0 = (m >> 32);//got 32 left(bigger) bits
+            m1 = (m & 0xffffffffL);//to avoid casting to int I have to write L at the end of the hexadecimal value  //4294967117
+
+            System.out.println("m  = " + m);
+            System.out.println("m0 = " + m0);
+            System.out.println("m1 = " + m1);
+           long m0deciphered =  cipherShamirShowLab(m0);
+            System.out.println("m0deciphered = " + m0deciphered);
+           long m1deciphered = cipherShamirShowLab(m1);
+            System.out.println("m1deciphered = " + m1deciphered);//got the same results(same bits on the out of the method calls)
+            //now I have to assemble the bits back together... but the question was: how would Bob see the cyphered halves?
+
+
+        }
         //System.out.println("p = " + p);// Алиса генерирует простое число p. Теперь ей надо сгенерировать взаимно простое
         // с (p - 1) число ca. Делается это с помощью обобщённого алгоритма Евклида. Т.е. надо генерировать случайные
         //числа, проверять их на простоту(тест Миллера-Рабина) p - 1 - чётное число, его не надо проверять на простоту
@@ -16,14 +50,14 @@ public class Lab2 {
         long pmo = p - 1;
         long ca;
         do {
-            ca = getLargePrimeNum();
+            ca = getLargePrimeNum(50);
         } while (!(gcd2(ca, pmo) == 1));//Алиса генерирует са взаимно простое с pmo
         long da = invers(pmo, ca)[1];//Алиса находит инверсию dа, т.е. сa*da mod pmo = 1
         System.out.println("ca = " + ca);
         System.out.println("da = " + da);
         long cb;//Боб получает р от Алисы и также, как Алиса генерирует числа cb & db
         do {
-            cb = getLargePrimeNum();
+            cb = getLargePrimeNum(50);
         } while (!(gcd2(cb, pmo) == 1));//нахожу са взаимно простое с pmo
         long db = invers(pmo, cb)[1];//а что использовать вместо m? PMO!
         System.out.println("cb = " + cb);
@@ -38,6 +72,7 @@ public class Lab2 {
         long x4 = powModMine(x3, db, p);// Bob расшифровывает x4, x4 должен быть равен m в итоге
         System.out.println(x1 + " " + x2 + " " + x3 + " " + x4);
         System.out.println("x3 = " + x3);
+        System.out.println("x4 = " + x4);
         return x4;
     }
 
@@ -93,69 +128,29 @@ public class Lab2 {
         long mi = e ^ key;
         System.out.println("mi = " + mi);
     }
-
-    public static void main(String[] args) {
-        cipherRSAShowLab();
-     //  ShamirChar sh = new ShamirChar();
-      // sh.executeShamir();
-/*        ShamirByteToInt sh = new ShamirByteToInt();
-        sh.executeShamir();
-        byte bt = -5;
-        int intbt = Byte.toUnsignedInt(bt);
-        System.out.println("int intbt = Byte.toUnsignedInt(bt); = " + intbt);
-
-        int x4 = 209;
-        byte x4b = (byte) (x4 & 0x00000ff);
-        System.out.println("x4b inside main = " + x4b);*/
-
-       /* Scanner sc;
-        try { var in = new FileInputStream("/home/stepa/Documents/projetcs/ZI_01/text.txt");
-            sc = new Scanner(in, "UTF-8");
-            while (sc.hasNextLine()) {
-                String line = sc.nextLine();
-                System.out.println(line);
-            }
-            DataOutputStream out = new DataOutputStream(new FileOutputStream("textChanged.txt"));
-
-            out.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("Does the file exist?");
+    public void mToM0_M1_char(long m) {
+        System.out.println("Long.toBinaryString(m) = " + Long.toBinaryString(m));//gives 64 zeros and ones in case of numbers like Long.MAX_VALUE - 1
+        String mStr = Long.toBinaryString(m);
+        char[] mCharArr = mStr.toCharArray();
+        int mCharArrLength = mCharArr.length;
+        //mCharArrLength = 61;
+        int mCharArr0Length = mCharArrLength / 2;
+        int mCharArr1Length = mCharArr0Length + mCharArrLength % 2;
+        System.out.println("mCharArrLength = " + mCharArrLength);
+        System.out.println("mCharArr0Length = " + mCharArr0Length);
+        System.out.println("mCharArr1Length = " + mCharArr1Length);
+        char[] mCharArr0 = new char[mCharArr0Length];
+        char[] mCharArr1 = new char[mCharArr1Length];
+        for (int i = 0; i < mCharArr0Length; i++) {
+            mCharArr0[i] = mCharArr[i];
         }
-        try (var in = new DataInputStream(new FileInputStream("/home/stepa/Documents/projetcs/ZI_01/textChanged.txt"))) {
-            byte[] bb = in.readAllBytes();
-            for (int i = 0; i < bb.length; i++) {
-                System.out.println(i + " in. = " + bb[i]);
-                bb[i] = (byte) sh.decypherShamir((long)bb[i]);//не факт, что это приведение типов сработает правильно...
-                System.out.println(i + " out = " + bb[i]);
-            }
-            DataOutputStream out = new DataOutputStream(new FileOutputStream("/home/stepa/Documents/projetcs/ZI_01/textChangedDecyphered.txt"));
-            out.write(bb);
-            out.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.out.println("Does the file exist?");
-        }*/
-        // System.out.println("cypherShamirShowLab = " + cypherShamirShowLab(4));;
-        /*try {
-            var out = new DataOutputStream(new FileOutputStream("textChanged.txt"));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }*/
-
-        /*BigInteger bi1, bi2, bi3;
-        // create a BigInteger exponent
-        BigInteger exponent = new BigInteger("521527");
-        bi1 = new BigInteger("15");
-        bi2 = new BigInteger("499303855789");
-        // perform modPow operation on bi1 using bi2 and exp
-        bi3 = bi1.modPow(exponent, bi2);
-        String str = bi1 + "^" +exponent+ " mod " + bi2 + " is " +bi3;
-        // print bi3 value
-        System.out.println( str );*/
+        for (int i = 0; i < mCharArr1Length; i++) {
+            mCharArr1[i] = mCharArr[mCharArr1Length + 1];
+        }//finally divided m to m0 & m1... the same thing could be done with the long itself... tried and didn't succeed
+        //char[][] returned = new char[][];
+        // returned[0][] =
+        //return {mCharArr0, mCharArr1};
     }
-
-
 }
 /*
 m = 10 Проверяю шифр Шамира
