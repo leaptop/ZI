@@ -8,9 +8,9 @@ import static com.company.Lab1.*;
 
 public class Lab2 {
     public static void main(String[] args) {
-        cipherShamirShowLab(Long.MAX_VALUE-178L);
-        System.out.println("-----------------------------------");
-        //cipherRSAShowLab();
+       // cipherShamirShowLab(Long.MAX_VALUE-178L);
+       // System.out.println("-----------------------------------");
+        cipherRSAShowLab();
         //  System.out.println("-----------------------------------");
         //cipherVernamShowLab();
         //System.out.println("-----------------------------------");
@@ -18,11 +18,7 @@ public class Lab2 {
         // cipherElGamalShowLab();
         //  ShamirChar sh = new ShamirChar();
         // sh.executeShamir();
-
     }
-
-
-
     public static long cipherShamirShowLab(long m) {//
         long p = getLargePrimeNum(50);//Алиса генерирует р, шлёт его Бобу
         System.out.println("p  = "+ p);

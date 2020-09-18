@@ -72,7 +72,7 @@ public class ElectronicSignatureRSA {
     }
 
     public static String md5Custom(String st) {//this method is able to hash any strings
-        MessageDigest messageDigest = null;//Created a referenceto an object, that can digest data to hash function
+        MessageDigest messageDigest = null;//Created a reference to an object, that can digest data to hash function
         byte[] digest = new byte[0];
 
         try {
