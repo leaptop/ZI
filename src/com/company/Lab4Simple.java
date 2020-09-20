@@ -7,6 +7,9 @@ import java.util.Random;
 import static com.company.Lab1.*;
 
 public class Lab4Simple {
+    public static void main(String[] args) {
+        Lab4Simple l4s = new Lab4Simple();
+    }
     public Lab4Simple() {
         Random rnd = new Random();
         do {
@@ -14,8 +17,8 @@ public class Lab4Simple {
             p = q.multiply(BigInteger.TWO).add(BigInteger.ONE);
         } while (!p.isProbablePrime(10));
         pmo = p.subtract(BigInteger.ONE);
-        this.KLength = 52;
-        this.m = 2;
+        this.KLength = 52;//a standard deck minus jokers
+        this.m = 3;//number of cards to give to each player
         this.n = 6;// players + table + remaining deck
         k = new ArrayList<>();
         for (int i = 0; i < KLength; i++) {//created a deck
@@ -24,11 +27,12 @@ public class Lab4Simple {
         players = new Player[n];//the array also keeps a table and the remaining deck
         for (int i = 0; i < n; i++) {
             players[i] = new Player(p, q, pmo, rnd, bitLength, k, i);//created n players
-            players[i].shuffle(k);//every player shuffled the deck
+
         }
         //Lab4Simple.printADeckInNumbers(k, KLength);
         for (int i = 0; i < n; i++) {
-            players[i].cipherADeck(k);//every player cyphered the deck
+            players[i].cipherADeck(k);//every player ciphered the deck
+            players[i].shuffle(k);//every player shuffled the deck
         }
         // Lab4Simple.printADeckInNumbers(k, KLength);
         for (int i = 0; i < n; i++) {
@@ -38,8 +42,8 @@ public class Lab4Simple {
         for (int i = 0; i < n - 2; i++) {
             players[i].takeMCards(k, m);//every player took m cards out of the deck
         }
-        players[n - 2].takeMCards(k, 5);// 5 cards are put on table
-        players[n - 1].takeMCards(k, (KLength - ((n - 2) * m + 5)));
+        players[n - 2].takeMCards(k, 5);// 5 cards are put on the table
+        players[n - 1].takeMCards(k, (KLength - ((n - 2) * m + 5)));//the remaining cards are left in the deck, but still have to be deciphered, so the deck takes them
         //all players should consistently decipher each others decks and apply the same operation to their decks finally. Metodichka pseudoCode looks incorrect
         //so I will invent my own way.
         for (int i = 0; i < n; i++) {
@@ -57,7 +61,7 @@ public class Lab4Simple {
         Lab4Simple.printADeckInNames(players[n - 2].takenCards, 5);//print a table
         System.out.println("A remaining deck:");
         Lab4Simple.printADeckInNames(players[n - 1].takenCards, (KLength - ((n - 2) * m + 5)));//print the remaining cards
-//A table and the remaining cards of the deck should also be deciphered. For that I'm deciding to put those two into the array of players.
+    //A table and the remaining cards of the deck should also be deciphered. For that I'm deciding to put those two into the array of players.
     }
 
     Player[] players;
@@ -67,7 +71,7 @@ public class Lab4Simple {
     BigInteger pmo;
     int KLength;
     int bitLength = 21;
-    int n;//number of players. Can be from 2 to 23. Though I've decided to put a table and the remaining deck at the players array, so it has t be from 4 to 25
+    int n;//number of players. Can be from 2 to 23. Though I've decided to put a table and the remaining deck at the players array, so it has to be from 4 to 25
     int m;// a number of cards given to every Player
 
     public static void printADeckInNumbers(ArrayList<BigInteger> k, int numberOfCards) {//prints a passed deck(ArrayList<BigInteger> k) to console
@@ -239,11 +243,6 @@ public class Lab4Simple {
             }
         }
         System.out.println("\n----------------------------------");
-    }
-
-    public static void main(String[] args) {
-        Lab4Simple l4s = new Lab4Simple();
-
     }
 }
 

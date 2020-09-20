@@ -34,7 +34,7 @@ class Alice {//ideally each object of Alice(any other voter) should have his/her
     BigInteger v;
     BigInteger one = BigInteger.ONE;
     BigInteger zero = BigInteger.ZERO;
-    BigInteger n;//have to be less than 1024 bits
+    BigInteger n;//has to be less than 1024 bits
     BigInteger r;
     String h;
     BigInteger hCap;
