@@ -5,10 +5,11 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class RGR01 {
+public class RGR01 {//Что ещё надо будет сдать? Тест по основным положениям теории чисел? контрольные работы?
+    //посещаемость уже можно будет не отмечать на лекциях?
     public RGR01(){
          rnd = new Random();
-         keyVernam = rnd.nextInt(20);//the size of the key has to be of the same range as the vertices number
+         keyVernam = rnd.nextInt(20);//the size of the key has to be of the same range as the edges number
     }
     ArrayList<Vertice> vertices;
     ArrayList<Edge> edges;
@@ -110,7 +111,7 @@ public void printOriginalAndIsomorphicGraphs(){
 
     public String[] readAFile() {
         Path path = Path.of("/home/stepa/Documents/projetcs/ZI_01/src/resources/graph.txt");
-        System.out.println(path);
+       // System.out.println(path);
         boolean exists = Files.exists(path);
         //System.out.println("exists = " + exists);
         String s;
